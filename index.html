@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APH Tool Selection Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 2rem 1rem 3rem;
+      color: #1A3B5D;
+    }
+    .aph-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    :root {
+      --aph-dark: #1A3B5D;
+      --aph-yellow: #FFC107;
+      --aph-teal: #44D7C4;
+      --aph-azure: #227799;
+      --aph-orange: #EA831C;
+      --aph-green: #0F8471;
+      --aph-light: #eef2f5;
+    }
+
+    /* Hero */
+    .aph-hero {
+      background: var(--aph-dark);
+      border-radius: 14px;
+      padding: 2rem 2rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .aph-hero-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--aph-teal);
+      margin-bottom: 0.5rem;
+    }
+    .aph-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--aph-yellow);
+      margin-bottom: 0.5rem;
+      line-height: 1.25;
+    }
+    .aph-hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.65;
+    }
+    .progress-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      margin-top: 1.25rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--aph-teal);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    .step-counter {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+
+    /* Section label */
+    .aph-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--aph-azure);
+      margin-bottom: 0.6rem;
+      margin-top: 1.6rem;
+    }
+
+    /* Cards */
+    .aph-card {
+      background: #ffffff;
+      border: 0.5px solid #d0d8e0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .aph-card:hover { border-color: var(--aph-azure); }
+    .aph-card.open { border-color: var(--aph-teal); }
+    .aph-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .aph-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .aph-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--aph-dark);
+      flex: 1;
+    }
+    .aph-chevron {
+      font-size: 13px;
+      color: #888;
+      transition: transform 0.25s;
+    }
+    .aph-card.open .aph-chevron { transform: rotate(180deg); }
+    .aph-card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .aph-card.open .aph-card-body { max-height: 700px; }
+    .aph-card-inner {
+      padding-top: 1rem;
+      font-size: 14px;
+      color: #445566;
+      line-height: 1.7;
+    }
+    .aph-card-inner p { margin-bottom: 0.5rem; }
+    .aph-card-inner p:last-child { margin-bottom: 0; }
+    .aph-highlight {
+      background: var(--aph-light);
+      border-left: 3px solid var(--aph-teal);
+      border-radius: 0 8px 8px 0;
+      padding: 0.6rem 0.85rem;
+      margin-top: 0.75rem;
+      font-size: 13px;
+      color: var(--aph-dark);
+      font-weight: 700;
+    }
+
+    /* EPIC grid */
+    .epic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .epic-card { border-radius: 12px; padding: 1rem 1.1rem; }
+    .epic-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .epic-word {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .epic-q { font-size: 13px; line-height: 1.6; }
+
+    .e-card { background: rgba(255,193,7,0.12); }
+    .e-letter { color: #d4a000; }
+    .e-word { color: #b38600; }
+    .e-q { color: #5a4300; }
+
+    .p-card { background: rgba(68,215,196,0.12); }
+    .p-letter { color: var(--aph-teal); }
+    .p-word { color: #1a8a7a; }
+    .p-q { color: #0d4a44; }
+
+    .i-card { background: rgba(34,119,153,0.13); }
+    .i-letter { color: var(--aph-azure); }
+    .i-word { color: #165974; }
+    .i-q { color: #0b3345; }
+
+    .c-card { background: rgba(234,131,28,0.12); }
+    .c-letter { color: var(--aph-orange); }
+    .c-word { color: #8c4d08; }
+    .c-q { color: #4d2a04; }
+
+    /* Decision box */
+    .decision-box {
+      background: var(--aph-dark);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      margin-top: 1.5rem;
+      opacity: 0.35;
+      transition: opacity 0.5s;
+    }
+    .decision-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--aph-yellow);
+      margin-bottom: 1rem;
+    }
+    .decision-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 0.7rem;
+    }
+    .decision-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .decision-text {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.55;
+    }
+    .decision-footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
+    /* Footer */
+    .aph-footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 12px;
+      color: #8899aa;
+      letter-spacing: 0.5px;
+    }
+    .aph-footer span {
+      color: var(--aph-azure);
+      font-weight: 700;
+    }
+
+    @media (max-width: 480px) {
+      .epic-grid { grid-template-columns: 1fr; }
+      .aph-hero h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="aph-wrap">
+
+    <div class="aph-hero">
+      <div class="aph-hero-label">AI Pathways Hub · Tool Selection Framework</div>
+      <h1>How to Choose the Right Tool</h1>
+      <p>Most tool decisions fail before they start — because the problem was never clearly defined. Work through these sections to make a confident, strategic choice.</p>
+      <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+      <div class="step-counter" id="step-counter">0 of 7 sections explored</div>
+    </div>
+
+    <div class="aph-section-label">Foundation — 3 questions to answer first</div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="0">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(255,193,7,0.15);color:#d4a000;">1</div>
+        <div class="aph-card-title">What problem am I actually solving?</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>Be specific, painful, and real. Not <em>"I want to be more productive."</em></p>
+        <p>Ask yourself: <strong style="color:var(--aph-azure)">What exact task is breaking down?</strong> Where are you losing time, energy, or accuracy right now?</p>
+        <div class="aph-highlight">If your answer is vague, stop here. Clarity comes before tools.</div>
+      </div></div>
+    </div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="1">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(68,215,196,0.15);color:var(--aph-teal);">2</div>
+        <div class="aph-card-title">What are the inputs and outputs?</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>What does this process need to work with — and what needs to come out the other side?</p>
+        <p>Think in concrete terms: <strong style="color:var(--aph-teal)">data, documents, decisions, deliverables.</strong> Map the flow before you pick a tool.</p>
+        <div class="aph-highlight">If you can't answer this — stop here and get clarity first.</div>
+      </div></div>
+    </div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="2">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(34,119,153,0.15);color:var(--aph-azure);">3</div>
+        <div class="aph-card-title">What does success look like?</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>Make it measurable. Make it observable.</p>
+        <p>Ask: <strong style="color:var(--aph-azure)">How will I know it worked?</strong> A time saved? A deliverable produced? A decision made with confidence?</p>
+        <div class="aph-highlight">Without a success measure, you can't evaluate any tool fairly.</div>
+      </div></div>
+    </div>
+
+    <div class="aph-section-label">EPIC as your tool selection filter</div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="3">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(255,193,7,0.1);color:#d4a000;">E</div>
+        <div class="aph-card-title">Apply the EPIC framework</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <div class="epic-grid">
+          <div class="epic-card e-card">
+            <div class="epic-letter e-letter">E</div>
+            <div class="epic-word e-word">Expert role</div>
+            <div class="epic-q e-q">What expertise does this tool require from you? Are you ready for that learning curve?</div>
+          </div>
+          <div class="epic-card p-card">
+            <div class="epic-letter p-letter">P</div>
+            <div class="epic-word p-word">Provide context</div>
+            <div class="epic-q p-q">What's your full situation? Time, budget, technical comfort, business stage. A tool perfect for someone else may be wrong for where you are.</div>
+          </div>
+          <div class="epic-card i-card">
+            <div class="epic-letter i-letter">I</div>
+            <div class="epic-word i-word">Inquire specifically</div>
+            <div class="epic-q i-q">What exact outcome do you need? The more specific, the easier the decision.</div>
+          </div>
+          <div class="epic-card c-card">
+            <div class="epic-letter c-letter">C</div>
+            <div class="epic-word c-word">Clarify rules</div>
+            <div class="epic-q c-q">What are your real constraints? These aren't excuses. They're data.</div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="aph-section-label">Two questions most people never ask</div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="4">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(234,131,28,0.15);color:var(--aph-orange);">?</div>
+        <div class="aph-card-title">What are the most likely ways this fails?</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>Name the top two or three failure modes <em>before</em> you start.</p>
+        <p>Recoverable assumptions are written down. <strong style="color:var(--aph-orange)">Unwritten assumptions are landmines.</strong></p>
+        <div class="aph-highlight">Write your assumptions down before you commit. Make them visible.</div>
+      </div></div>
+    </div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="5">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(15,132,113,0.15);color:var(--aph-green);">?</div>
+        <div class="aph-card-title">How will I review this before I'm fully committed?</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>Free tier first. Small pilot. One simple workflow before a complex system.</p>
+        <p>Build in a checkpoint — <strong style="color:var(--aph-green)">give yourself permission to stop</strong> before you're too deep to turn back.</p>
+        <div class="aph-highlight">Smart pilots protect your time, money, and momentum.</div>
+      </div></div>
+    </div>
+
+    <div class="aph-card" onclick="toggle(this)" data-idx="6">
+      <div class="aph-card-header">
+        <div class="aph-num" style="background:rgba(34,119,153,0.1);color:var(--aph-azure);">→</div>
+        <div class="aph-card-title">Making the final decision</div>
+        <div class="aph-chevron">▼</div>
+      </div>
+      <div class="aph-card-body"><div class="aph-card-inner">
+        <p>When you can answer all of the above, one of two things happens — and both are wins.</p>
+      </div></div>
+    </div>
+
+    <div class="decision-box" id="decision-box" style="opacity:0.7;transition:opacity 0.5s;">
+      <h3>Both outcomes are wins ✓</h3>
+      <div class="decision-row">
+        <div class="decision-icon">✅</div>
+        <div class="decision-text"><strong style="color:var(--aph-teal)">The right tool becomes obvious.</strong> You have the clarity, context, and constraints to choose with confidence.</div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">✅</div>
+        <div class="decision-text"><strong style="color:var(--aph-yellow)">You realize you need more clarity first.</strong> That's not failure — that's the framework working exactly as it should.</div>
+      </div>
+      <div class="decision-footer">
+        Choosing nothing intentionally is infinitely better than choosing something randomly.
+      </div>
+    </div>
+
+    <div class="aph-footer">
+      <span>AI Pathways Hub</span> · Strategic AI for Entrepreneurs
+    </div>
+
+  </div>
+
+  <script>
+    var opened = new Set();
+    function toggle(card) {
+      var isOpen = card.classList.contains('open');
+      card.classList.toggle('open', !isOpen);
+      var idx = card.getAttribute('data-idx');
+      if (!isOpen) { opened.add(idx); } else { opened.delete(idx); }
+      updateProgress();
+      if (idx === '6') {
+        document.getElementById('decision-box').style.opacity = !isOpen ? '1' : '0.7';
+      }
+    }
+    function updateProgress() {
+      var pct = Math.round((opened.size / 7) * 100);
+      document.getElementById('progress').style.width = pct + '%';
+      document.getElementById('step-counter').textContent = opened.size + ' of 7 sections explored';
+    }
+  </script>
+</body>
+</html>
