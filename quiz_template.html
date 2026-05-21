@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Lato',sans-serif;background:#1A3B5D;min-height:100vh;padding:1.5rem;display:flex;align-items:flex-start;justify-content:center}
+.card{background:#fff;border-radius:16px;max-width:620px;width:100%;padding:2rem 2rem 1.5rem;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#1A3B5D,#FFC107,#44D7C4)}
+.logo-wrap{display:flex;justify-content:center;margin-bottom:1.25rem}
+.logo-wrap img{width:110px;height:110px;object-fit:contain;border-radius:50%}
+h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:600;color:#1A3B5D;text-align:center;margin-bottom:4px}
+.subtitle{font-size:13px;color:#888;text-align:center;margin-bottom:1.5rem}
+input{width:100%;padding:10px 14px;border:1px solid #d0d7e2;border-radius:8px;font-size:14px;color:#1A3B5D;outline:none;margin-bottom:1.25rem}
+input:focus{border-color:#44D7C4}
+.progress-bar{height:4px;background:#e8edf3;border-radius:2px;margin-bottom:1.5rem}
+.progress-fill{height:100%;background:#FFC107;border-radius:2px;transition:width .4s ease}
+.q-label{font-size:11px;font-weight:700;color:#44D7C4;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.q-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:#1A3B5D;margin-bottom:1.25rem;line-height:1.45}
+.option{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid #d0d7e2;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:border-color .2s,background .2s;background:#fff}
+.option:hover{border-color:#44D7C4;background:#f0faf8}
+.option.selected{border-color:#1A3B5D;background:#eef3f9;border-width:2px}
+.opt-badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#1A3B5D;color:#FFC107;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.opt-text{font-size:14px;line-height:1.55;color:#333;padding-top:3px}
+.nav{display:flex;justify-content:flex-end;margin-top:1.25rem}
+.btn{padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Lato',sans-serif;transition:opacity .2s}
+.btn-primary{background:#1A3B5D;color:#FFC107}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.result-card{border:1px solid #d0d7e2;border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:12px}
+.result-card.highlight{border-color:#44D7C4;border-width:2px;background:#f0faf8}
+.result-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#1A3B5D;margin-bottom:6px}
+.result-body{font-size:14px;color:#333;line-height:1.6}
+.result-note{font-size:12px;color:#EA831C;font-style:italic;margin-top:7px}
+.tally{display:flex;gap:8px;margin-bottom:1.25rem;justify-content:center}
+.tally-pill{padding:5px 16px;border-radius:99px;font-size:13px;font-weight:700}
+.pill-a{background:#eef3f9;color:#1A3B5D;border:1px solid #b5cde8}
+.pill-b{background:#fff8e6;color:#7a5200;border:1px solid #FFC107}
+.pill-c{background:#f0faf8;color:#085041;border:1px solid #44D7C4}
+.switch-note{text-align:center;margin-top:1.25rem;font-size:13px;color:#666}
+.switch-note strong{color:#1A3B5D}
+.footer{text-align:center;font-size:12px;color:#aaa;margin-top:1.25rem;padding-top:1rem;border-top:1px solid #eee}
+.screen{display:none}
+.screen.active{display:block}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="logo-wrap"><img src="LOGO_PLACEHOLDER" alt="AI Pathways Hub"></div>
+<div id="s-intro" class="screen active">
+<h1>Which Pathway Is Right for You?</h1>
+<p class="subtitle">A 3-question self-assessment — no wrong answers.</p>
+<input id="fname" type="text" placeholder="Your name (optional)">
+<p style="font-size:13px;color:#666;margin-bottom:1.25rem;text-align:center">Answer honestly, then get your pathway recommendation.</p>
+<div class="nav"><button class="btn btn-primary" onclick="startQuiz()">Start assessment</button></div>
+</div>
+<div id="s-quiz" class="screen">
+<div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+<div id="q-label" class="q-label"></div>
+<div id="q-text" class="q-text"></div>
+<div id="q-opts"></div>
+<div class="nav"><button class="btn btn-primary" id="btn-next" disabled onclick="nextQ()">Next</button></div>
+</div>
+<div id="s-result" class="screen">
+<h1>Your Pathway Result</h1>
+<p class="subtitle" id="res-greeting"></p>
+<div class="tally" id="tally"></div>
+<div id="result-cards"></div>
+<div class="switch-note"><strong>You can switch pathways anytime.</strong><br>This is just a starting point, not a lock.</div>
+<div class="footer">AI Pathways Hub &bull; aipathwayshub.com</div>
+</div>
+</div>
+<script>
+const qs=[
+{text:"How confident do you feel using AI right now?",opts:[
+{l:"A",t:"I've tried it a little but still feel uncertain and overwhelmed most of the time"},
+{l:"B",t:"I've experimented with AI and get some results, but I'm not consistent or confident"},
+{l:"C",t:"I use AI regularly and feel comfortable directing it to get what I need"}
+]},
+{text:"How do you currently approach AI?",opts:[
+{l:"A",t:"I mostly follow tutorials and copy prompts — I haven't found my own approach yet"},
+{l:"B",t:"I experiment with different tools and prompts but my results are hit or miss"},
+{l:"C",t:"I know what I want from AI, I give it clear direction, and I get consistent results"}
+]},
+{text:"What do you actually want right now?",opts:[
+{l:"A",t:"I want to understand AI clearly and build real confidence from the ground up"},
+{l:"B",t:"I want to fill the gaps in my knowledge and make my AI use more consistent"},
+{l:"C",t:"I want to go deeper — automation, systems, and advanced business applications"}
+]}
+];
+let cur=0,answers=[],sel=null;
+function startQuiz(){show('s-quiz');renderQ();}
+function renderQ(){
+const q=qs[cur];
+document.getElementById('prog').style.width=((cur/3)*100)+'%';
+document.getElementById('q-label').textContent='Question '+(cur+1)+' of 3';
+document.getElementById('q-text').textContent=q.text;
+const btn=document.getElementById('btn-next');
+btn.textContent=cur===2?'See my result':'Next';
+btn.disabled=true;sel=null;
+const c=document.getElementById('q-opts');c.innerHTML='';
+q.opts.forEach((o,i)=>{
+const d=document.createElement('div');
+d.className='option';
+d.innerHTML='<div class="opt-badge">'+o.l+'</div><div class="opt-text">'+o.t+'</div>';
+d.onclick=()=>selectOpt(i,d);
+c.appendChild(d);
+});
+}
+function selectOpt(i,el){
+document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
+el.classList.add('selected');
+sel=qs[cur].opts[i].l;
+document.getElementById('btn-next').disabled=false;
+}
+function nextQ(){
+if(sel===null)return;
+answers.push(sel);cur++;
+if(cur<3){renderQ();}else{showResult();}
+}
+function showResult(){
+document.getElementById('prog').style.width='100%';
+const cnt={A:0,B:0,C:0};
+answers.forEach(a=>cnt[a]++);
+const name=document.getElementById('fname').value.trim();
+document.getElementById('res-greeting').textContent=name?'Great work, '+name+'! Here\'s your recommendation.':'Here\'s your recommendation.';
+document.getElementById('tally').innerHTML='<div class="tally-pill pill-a">A: '+cnt.A+'</div><div class="tally-pill pill-b">B: '+cnt.B+'</div><div class="tally-pill pill-c">C: '+cnt.C+'</div>';
+const isC=cnt.C>cnt.A&&cnt.C>cnt.B;
+const isBoverA=cnt.B>cnt.A;
+const rc=document.getElementById('result-cards');rc.innerHTML='';
+const d=document.createElement('div');
+d.className='result-card highlight';
+if(isC){d.innerHTML='<div class="result-title">Mostly C\'s → Jump into the Builders Pathway</div><div class="result-body">You\'re ready for deeper strategy, automation, and advanced applications.</div><div class="result-note">Note: Builders Pathway unlocks at Level 2 — earned by engaging in the community. Most members get there within their first few days. While you\'re getting there, explore Clarity Pathway. You might be surprised what you find.</div>';}
+else if(isBoverA){d.innerHTML='<div class="result-title">Mostly B\'s → Start with the Clarity Pathway</div><div class="result-body">A mix of answers tells us your foundation needs strengthening first. Clarity Pathway will fast-track your confidence before you build.</div><div class="result-note">Head to the Understanding AI classroom and start with Lesson 1.</div>';}
+else{d.innerHTML='<div class="result-title">Mostly A\'s → Start with the Clarity Pathway</div><div class="result-body">You\'re exactly who this pathway was built for. We start with thinking, not tools — and build your confidence one step at a time.</div><div class="result-note">Head to the Understanding AI classroom to begin.</div>';}
+rc.appendChild(d);
+show('s-result');
+}
+function show(id){
+document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
